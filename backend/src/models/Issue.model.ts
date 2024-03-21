@@ -1,7 +1,5 @@
-import mongoose, {Schema, Document} from "mongoose";
-
-
-
+import mongoose, { Schema, Document } from "mongoose";
+import mongooseAggregate from 'mongoose-aggregate-paginate-v2'
 enum IssueStatus {
     OPEN = "open",
     CLOSED = "closed",
@@ -12,22 +10,19 @@ interface IssueProps extends Document {
     title: string;
     description: string;
     status: IssueStatus;
-    assignee: string;
-    reporter: string;
+    reporter: Schema.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
-};
-
+}
 
 const IssueSchema = new Schema<IssueProps>({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    status: { type: String, enum: Object.values(IssueStatus), default: IssueStatus.OPEN },
+    reporter: { type: Schema.Types.ObjectId, ref: 'User', required: true }, 
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+},{timestamps:true});
+IssueSchema.plugin(mongooseAggregate);
 
-    title: {type: String, required: true},
-    description: {type: String, required: true},
-    status: {type: String, enum: Object.values(IssueStatus), default: IssueStatus.OPEN},
-    assignee: {type: String, required: true},
-    reporter: {type: String, required: true},
-    createdAt: {type: Date, default: Date.now},
-    updatedAt: {type: Date, default: Date.now}
-})
-
-export const Issue = mongoose.model('Issue', IssueSchema);
+export const Issue = mongoose.model<IssueProps>('Issue', IssueSchema);

@@ -10,16 +10,17 @@ import AdminRoute from "./components/AdminRoute"
 import Users from "./pages/Users"
 import Settings from "./pages/Settings"
 import UpdateAccount from "./pages/UpdateAccount"
-
+import { useSelector } from "react-redux"
 
 function App() {
 
+  const {token} = useSelector((state: any) => state.user)
 
   return (
     <BrowserRouter>
-      <NavBar/>
+    {token && <NavBar />}
       <Routes>
-        <Route path="/" element={<Home />} />
+       {!token && <Route path="/" element={<Home />} />}
         <Route element={<PrivateRoute />} >
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/issues" element={<Issue />} />

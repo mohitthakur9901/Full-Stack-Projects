@@ -65,7 +65,7 @@ const AuthForm = ({ isSignUp = false }: { isSignUp?: boolean }) => {
   };
 
   return (
-    <div className="min-h-screen mt-20 flex justify-center items-center">
+    <div className="min-h-screen  flex justify-center items-center">
     <div className="flex p-3 max-w-3xl flex-col md:flex-row md:items-center gap-5 bg-white shadow-md rounded-md">
       {/* left */}
       <div className="flex-1">
@@ -75,7 +75,7 @@ const AuthForm = ({ isSignUp = false }: { isSignUp?: boolean }) => {
           </span>
         </Link>
         <p className="text-sm mt-5">
-          This is a demo project. You can {isSignUp ? "sign up" : "sign in"} with your email and password or with Google.
+          This is a demo project. You can {isSignUp ? "sign up" : "sign in"} with example@gmail.com 
         </p>
       </div>
       {/* right */}

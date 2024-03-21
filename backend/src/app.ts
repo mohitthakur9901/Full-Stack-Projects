@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser';
 
 
 import UserRoute from './routes/User.Route'
-
+import IssueRoute from './routes/Issue.Route'
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,6 +24,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', UserRoute);
+app.use('/api/issue', IssueRoute);
 
 export {
     app
