@@ -8,16 +8,16 @@ import { useState } from 'react';
 const NavBar = () => {
   const currentPath = window.location.pathname;
   const user = useSelector((state: any) => state.user);
-  console.log(user.loggedInUser);
+  // console.log(user.loggedInUser);
   
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
 
   const links = [
-    { label: 'Dashboard', href: '/dashboard' },
+  
     { label: 'Issues', href: '/issues' },
-    ...(user.loggedInUser?.Role === 'admin' ? [{ label: 'All Users', href: '/all-users' }] : [])
+    ...(user.loggedInUser?.Role === 'admin' ? [{ label: 'Dashboard', href: '/dashboard' }, { label: 'All Users', href: '/all-users' }] : [])
   ];
 
   const toggleDropdown = () => {
@@ -27,7 +27,7 @@ const NavBar = () => {
   return (
     <nav className='flex items-center justify-between border-b-2 '>
       <div className="flex items-center space-x-6 mb-5 px-5 h-14 text-xl">
-        <Link to='/'><FaBug /></Link>
+       <FaBug />
         <ul className='flex items-center space-x-6'>
           {links.map((link) => (
             <li key={link.href}>

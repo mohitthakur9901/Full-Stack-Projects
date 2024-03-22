@@ -43,4 +43,10 @@ const getAllIssues = AsyncHandler(async (req: Request, res: Response) => {
       }
 })
 
-export { getAllIssues, createIssue, updateIssue };
+// count all issues
+const countIssues = AsyncHandler(async (req: Request, res: Response) => {
+    const count = await Issue.countDocuments();
+    res.json(new ApiResponse(200, count, "Issues count fetched successfully"));
+})
+
+export { getAllIssues, createIssue, updateIssue , countIssues };

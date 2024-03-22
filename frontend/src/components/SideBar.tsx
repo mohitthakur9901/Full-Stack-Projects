@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Sidebar } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearUser } from '../store/User/UserSlice';
@@ -6,7 +6,7 @@ import UpdateAccount from '../pages/UpdateAccount';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-const SideBar = ({ setIsTrue }: { setIsTrue: React.Dispatch<React.SetStateAction<boolean>> }) => {
+const SideBar = () => {
     const dispatch = useDispatch();
     const [activeChild, setActiveChild] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -23,7 +23,9 @@ const SideBar = ({ setIsTrue }: { setIsTrue: React.Dispatch<React.SetStateAction
             });
             if (response.ok) {
                 toast.success('User deleted successfully');
+                dispatch(clearUser()); // Clear the user from the Redux state.
                 navigate('/');
+                window.location.reload(); // Reload the page to clear the Redux state.
             }
         } catch (error) {
             console.error('Error deleting user:', error);
@@ -37,7 +39,6 @@ const SideBar = ({ setIsTrue }: { setIsTrue: React.Dispatch<React.SetStateAction
         { name: "LogOut", action: () => {
             dispatch(clearUser());
             navigate('/');
-            setIsTrue(prevState => !prevState);
             setActiveChild(null);
             window.location.reload(); // Reload the page to clear the Redux state. 
         } },
@@ -46,7 +47,7 @@ const SideBar = ({ setIsTrue }: { setIsTrue: React.Dispatch<React.SetStateAction
 
     const handleButtonClick = (name: string) => {
         setActiveChild(prevState => (prevState === name ? null : name));
-        setIsTrue(prevState => !prevState);
+        
     };
 
     return (

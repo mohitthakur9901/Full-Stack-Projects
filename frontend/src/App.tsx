@@ -11,6 +11,7 @@ import Users from "./pages/Users"
 import Settings from "./pages/Settings"
 import UpdateAccount from "./pages/UpdateAccount"
 import { useSelector } from "react-redux"
+import CreateIssue from "./pages/CreateIssue"
 
 function App() {
 
@@ -18,11 +19,11 @@ function App() {
 
   return (
     <BrowserRouter>
-    {token && <NavBar />}
+    {token ? <NavBar /> : ""}
       <Routes>
-       {!token && <Route path="/" element={<Home />} />}
+       <Route path="/" element={<Home />} />
         <Route element={<PrivateRoute />} >
-          <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/create-issue" element={<CreateIssue />} />
           <Route path="/issues" element={<Issue />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/update-account" element={<UpdateAccount />} />
@@ -30,6 +31,7 @@ function App() {
         </Route>
         <Route element={<AdminRoute/>} >
         <Route path="/all-users" element={<Users />} />
+        <Route path="/dashboard" element={<DashBoard />} />
         </Route>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />

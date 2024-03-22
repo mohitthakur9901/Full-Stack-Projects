@@ -1,5 +1,8 @@
+import { Button } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 type IssueStatus = "open" | "closed" | "in_progress";
 
@@ -14,6 +17,7 @@ interface IssueProps {
 }
 
 const Issue = () => {
+  const {loggedInUser} = useSelector((state: any) => state.user)
   const [issues, setIssues] = useState<IssueProps[]>([]);
   const { token } = useSelector((state: any) => state.user);
 
@@ -24,6 +28,7 @@ const Issue = () => {
   // Selected status for filtering (default: all)
   const [selectedStatus, setSelectedStatus] = useState<IssueStatus>();
 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAllIssues = async () => {
@@ -46,6 +51,8 @@ const Issue = () => {
           throw new Error(`Error fetching issues: ${res.statusText}`);
         }
         const data = await res.json();
+        console.log(data.data);
+        
         setIssues(data.data);
         setIsLoading(false)
       } catch (err) {
@@ -54,17 +61,52 @@ const Issue = () => {
       }
     };
     getAllIssues();
-  }, [selectedStatus]);
-  console.log(issues);
-
+  }, [selectedStatus, token]);
+  
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedStatus(event.target.value as IssueStatus);
   };
 
+  const handleUpdate = async (id: string, status: IssueStatus) => {
+    try {
+      const res = await fetch(`/api/issue/update-issue/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status }),
+      });
+
+      if (res.ok) {
+        toast.success('Issue updated successfully', {
+          style: {
+            background: '#333',
+            color: '#fff',
+          },
+        });
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('Error updating issue:', error);
+      toast.error('Error updating issue', {
+        style: {
+          background: '#333',
+          color: '#fff',
+        },
+      });
+    }
+  }
+
   return (
       token  ? (
         <div className="container mx-auto mt-5">
+          <div className="flex items-center justify-end mb-4">
+            <Button className='bg-red-600 hover:bg-red-400 transition ease-in' onClick={() => navigate('/create-issue')} >
+              Create Issue
+            </Button>
+          </div>
           {isLoading && <p className="text-center">Loading issues...</p>}
           {error && <p className="text-center text-red-500">Error: {error}</p>}
           {issues && (
@@ -73,7 +115,7 @@ const Issue = () => {
               <select
                 value={selectedStatus}
                 onChange={handleStatusChange}
-                className="w-full mb-4 mt-5 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full mb-4 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 <option value="">All</option>
                 <option value="open">Open</option>
@@ -89,6 +131,10 @@ const Issue = () => {
                     <th className="px-3 py-2">Title</th>
                     <th className="px-3 py-2">Description</th>
                     <th className="px-3 py-2">Status</th>
+                   {
+                    loggedInUser.Role === 'admin' && (
+                      <th className="px-3 py-2">Update Status</th>)
+                   }
                   </tr>
                 </thead>
                 <tbody>
@@ -108,11 +154,21 @@ const Issue = () => {
                         >
                           {issue.status}
                         </td>
+                       {
+                        loggedInUser.Role === 'admin' && (
+                          <td className="px-3 py-2">
+                          <select className="px-3 py-2 border border-gray-300 rounded" onChange={(e) => handleUpdate(issue._id, e.target.value as IssueStatus)}>
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="in_progress">In Progress</option>
+                          </select>
+                    
+                          </td>)
+                       }
                       </tr>
                     ) : (
                       null
                     )
-
                   ))}
                 </tbody>
               </table>

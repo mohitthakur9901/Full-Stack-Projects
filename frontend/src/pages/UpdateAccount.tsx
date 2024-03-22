@@ -13,7 +13,6 @@ const UpdateAccount: React.FC = () => {
   const { loggedInUser, token } = useSelector((state: any) => state.user);
   console.log(loggedInUser);
   
-  
   const [form, setForm] = useState<UserUpdate>({
     email: loggedInUser?.email || '', // Pre-fill email if available
     password: '',
@@ -41,7 +40,6 @@ const UpdateAccount: React.FC = () => {
       const data = await response.json();
       if (data.success) {
         dispatch(setUser(data.data));
-        setForm({ email: '', password: '' });
         setLoading(false);
         toast.success('Account Updated Successfully');
       } else {

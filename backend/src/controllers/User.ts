@@ -77,10 +77,12 @@ const GetUsers = AsyncHandler(async (req: Request, res: Response) => {
 
 
 const UpdateUser = AsyncHandler(async (req: Request, res: Response) => {
+    const {email , password} = req.body;
     try {
-    
-       
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true  });
+        const user = await User.findByIdAndUpdate(req.params.id,{
+            email,
+            password
+        }, { new: true  });
         const validUser = await User.findById(req.params.id).select('-password');
         return res.json(new ApiResponse(200, validUser));
     } catch (error: any) {
@@ -98,5 +100,26 @@ const DeleteUser = AsyncHandler(async (req: Request, res: Response) => {
     }
 });
 
+// update to admin
+const updateToAdmin = AsyncHandler(async (req: Request, res: Response) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id,{
+            Role: "admin"
+        }, { new: true  });
+        const validUser = await User.findById(req.params.id).select('-password');
+        return res.json(new ApiResponse(200, validUser));
+    } catch (error: any) {
+        throw new ApiError(500, error);
+    }
+})
 
-export { RegisterUser, LoginUser, GetUsers, UpdateUser ,DeleteUser };
+const totalUsers = AsyncHandler(async (req: Request, res: Response) => {
+    try {
+        const users = await User.countDocuments();
+        return res.json(new ApiResponse(200, users));
+    } catch (error: any) {
+        throw new ApiError(500, error);
+    }
+})
+
+export { RegisterUser, LoginUser, GetUsers, UpdateUser ,DeleteUser , updateToAdmin , totalUsers};
