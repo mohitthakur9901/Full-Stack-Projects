@@ -25,7 +25,7 @@ const TaskSchema = new mongoose.Schema<Task>({
     status: {
         type: String,
         enum: Object.values(Status),
-        default: Status.IN_PROGRESS,
+        default: Status.OPEN,
     },
     assignedTo: {
         type: Schema.Types.ObjectId,

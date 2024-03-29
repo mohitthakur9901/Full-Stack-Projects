@@ -23,6 +23,10 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        default: 'user',
+    },
     email: {
         type: String,
         required: true,
@@ -34,7 +38,9 @@ const userSchema = new mongoose_1.default.Schema({
 }, { timestamps: true });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        this.password = yield bcrypt_1.default.hash(this.password, 10);
+        if (this.isModified('password')) {
+            this.password = yield bcrypt_1.default.hash(this.password, 10);
+        }
         next();
     });
 });

@@ -40,7 +40,12 @@ const Signup = () => {
       if (response.status === 200) {
         dispatch(setUserState(response.data.data))
         toast.success('Logining successful');
-        navigate('/dashboard');
+        if (response.data.data.role === "admin") {
+          navigate('/dashboard');
+        }
+        else {
+          navigate('/tasks');
+        }
       }
       setIsLoading(false);
       // console.log(response.data);

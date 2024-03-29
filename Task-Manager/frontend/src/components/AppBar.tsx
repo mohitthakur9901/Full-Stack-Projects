@@ -7,13 +7,14 @@ interface AppBarProps {
   user: string;
   className:string
   img:string
-  
+  role:string
 }
 
-const AppBar : React.FC<AppBarProps> = ({ user,img,className }) => {
+const AppBar : React.FC<AppBarProps> = ({ user,img,className , role }) => {
+  
   return (
     <div className={`flex justify-between items-center p-5 border-b border-gray-200 bg-gray-800 text-white rounded-md mb-5 ${className}`}>
-    <Link to="/dashboard" className="text-xl font-bold hover:animate-pulse">
+    <Link to={role === 'admin' ? '/dashboard' : '/tasks'} className="text-xl font-bold hover:animate-pulse">
     <SiTask className="mr-2 text-4xl " />
     </Link>
     <div className="flex items-center justify-between">

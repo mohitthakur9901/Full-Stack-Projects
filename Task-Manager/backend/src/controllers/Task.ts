@@ -47,3 +47,11 @@ export const updateTask = AsyncHandler(async (req, res) => {
     }
     return res.json(new ApiResponse(200, getTask, "Task updated successfully"))
 })
+
+export const updateStatus = AsyncHandler(async (req, res) => {
+    const getTask = await task.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
+    if (!getTask) {
+        throw new ApiError(404, "Task not found");
+    }
+    return res.json(new ApiResponse(200, getTask, "Task updated successfully"))
+})

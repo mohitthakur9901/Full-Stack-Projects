@@ -19,16 +19,18 @@ const verifyToken = (0, AsyncHandler_1.default)((req, res, next) => __awaiter(vo
     var _a;
     const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
     if (!token) {
-        return next(new ApiError_1.default('No token provided', 401));
+        return next(new ApiError_1.default(401, 'No token provided'));
     }
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+        const decoded = jsonwebtoken_1.default.verify(token, process.env.ACCESS_TOKEN_SECRET);
+        if (!decoded) {
+            return next(new ApiError_1.default(401, 'Invalid token'));
+        }
         req.user = decoded;
         next();
     }
     catch (error) {
-        return next(new ApiError_1.default('Invalid token', 401));
+        return next(new ApiError_1.default(401, 'Invalid token'));
     }
-    return;
 }));
 exports.default = verifyToken;
